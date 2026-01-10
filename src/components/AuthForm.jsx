@@ -15,6 +15,50 @@ const inputClass = `
   focus:outline-none focus:ring-2 focus:ring-sky-500
 `;
 
+const getAuthErrorMessage = (error) => {
+    if (!error?.code && !error?.message) {
+        return 'Authentication failed. Please try again.';
+    }
+
+    const msg = (error.code || error.message || '').toLowerCase();
+
+    if (msg.includes('email_exists')) {
+        return 'An account with this email already exists. Please log in.';
+    }
+
+    if (msg.includes('invalid login credentials')) {
+        return 'Incorrect email or password.';
+    }
+
+    if (msg.includes('email not confirmed')) {
+        return 'Please verify your email before logging in.';
+    }
+
+    if (msg.includes('invalid email')) {
+        return 'Please enter a valid email address.';
+    }
+
+    if (msg.includes('password')) {
+        return 'Password must be at least 6 characters.';
+    }
+
+    if (msg.includes('too many')) {
+        return 'Too many attempts. Please wait and try again.';
+    }
+
+    if (msg.includes('google_auth_failed')) {
+        return 'Google sign-in failed. Please try again.';
+    }
+
+    if (msg.includes('network')) {
+        return 'Network error. Please check your connection.';
+    }
+
+    return 'Authentication failed. Please try again.';
+};
+
+
+
 const AuthForm = () => {
     const [isSignup, setIsSignup] = useState(false);
     const [email, setEmail] = useState('');
@@ -32,11 +76,12 @@ const AuthForm = () => {
         try {
             if (isSignup) {
                 await signUp(email, password);
+                setError('Account created. Please check your email to verify.');
             } else {
                 await signIn(email, password);
             }
         } catch (err) {
-            setError(err.message || 'Something went wrong');
+            setError(getAuthErrorMessage(err));
         } finally {
             setLoading(false);
         }

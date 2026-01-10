@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Gradient Background -->
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"></stop>
+      <stop offset="100%" stop-color="#22c55e"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#grad)"></rect>
+
+  <!-- Insight Graph (longer first & last segments) -->
+  <path d="M14 42 L26 30 L36 36 L50 24" stroke="#020617" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round"></path>
+
+  <!-- Data Points -->
+  <circle cx="14" cy="42" r="3.5" fill="#020617"></circle>
+  <circle cx="26" cy="30" r="3.5" fill="#020617"></circle>
+  <circle cx="36" cy="36" r="3.5" fill="#020617"></circle>
+  <circle cx="50" cy="24" r="3.5" fill="#020617"></circle>
+</svg>

@@ -31,7 +31,11 @@ const ExpenseList = ({ expenses, onChange }) => {
     });
 
     if (!expenses.length) {
-        return <p className="text-sm opacity-70">No expenses yet.</p>;
+        return (
+            <div className="text-sm opacity-70 mt-4">
+                No expenses yet. Add your first expense above to start tracking.
+            </div>
+        );
     }
 
     const startEdit = (expense) => {

@@ -7,6 +7,7 @@ import { CATEGORIES } from '../constants/categories';
 const AddExpense = ({ onAdd }) => {
     const { user } = useAuth();
     const [error, setError] = useState(null);
+    const [saving, setSaving] = useState(false);
 
     const [form, setForm] = useState({
         item_name: '',
@@ -31,6 +32,8 @@ const AddExpense = ({ onAdd }) => {
         }
 
         try {
+            setSaving(true);
+
             await addExpense({
                 user_id: user.id,
                 item_name: form.item_name,
@@ -51,6 +54,8 @@ const AddExpense = ({ onAdd }) => {
             onAdd();
         } catch (err) {
             setError(err.message || 'Failed to add expense');
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -114,8 +119,12 @@ const AddExpense = ({ onAdd }) => {
 
             {/* Actions */}
             <div className="flex items-center gap-4">
-                <button type="submit" className={primaryButton}>
-                    Add Expense
+                <button
+                    type="submit"
+                    disabled={saving}
+                    className={`${primaryButton} disabled:opacity-60`}
+                >
+                    {saving ? 'Adding…' : 'Add Expense'}
                 </button>
 
                 {error && (

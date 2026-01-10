@@ -12,34 +12,44 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         let isMounted = true;
 
+        // 1️⃣ Initial session check (page refresh / first load)
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (!isMounted) return;
 
-            setUser(session?.user ?? null);
-
-            if (session?.user) {
-                getMyProfile()
-                    .then((profile) => setRole(profile.role))
-                    .finally(() => setLoading(false));
-            } else {
+            if (!session?.user) {
+                setUser(null);
                 setRole(null);
                 setLoading(false);
+                return;
             }
+
+            setUser(session.user);
+            setLoading(true);
+
+            getMyProfile()
+                .then((profile) => setRole(profile.role))
+                .catch(() => setRole(null))
+                .finally(() => setLoading(false));
         });
 
+        // 2️⃣ Listen for auth changes (login, logout, OAuth)
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-
-            if (session?.user) {
-                setLoading(true);
-                getMyProfile()
-                    .then((profile) => setRole(profile.role))
-                    .finally(() => setLoading(false));
-            } else {
+            if (!session?.user) {
+                setUser(null);
                 setRole(null);
+                setLoading(false);
+                return;
             }
+
+            setUser(session.user);
+            setLoading(true);
+
+            getMyProfile()
+                .then((profile) => setRole(profile.role))
+                .catch(() => setRole(null))
+                .finally(() => setLoading(false));
         });
 
         return () => {

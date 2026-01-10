@@ -6,11 +6,11 @@ const AppLoader = ({ label = 'Loading…' }) => {
         >
             <div
                 className="
-          flex flex-col items-center gap-4
-          backdrop-blur-xl
-          rounded-2xl
-          px-8 py-6
-          shadow-lg
+        flex flex-col items-center gap-4
+        backdrop-blur-xl
+        rounded-2xl
+        px-8 py-6
+        shadow-lg
         "
                 style={{
                     backgroundColor: 'var(--bg-glass)',

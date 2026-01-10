@@ -1,13 +1,27 @@
 import { supabase } from './supabase';
 
+/**
+ * Normalized auth error
+ */
+const createAuthError = (code) => ({ code });
+
 export const signUp = async (email, password) => {
     const { data, error } = await supabase.auth.signUp({
         email,
         password,
     });
 
-    if (error) throw error;
-    return data;
+    if (error) {
+        throw createAuthError(error.message);
+    }
+
+    // Supabase security behavior:
+    // identities.length === 0 → user already exists
+    if (data?.user && data.user.identities?.length === 0) {
+        throw createAuthError('EMAIL_EXISTS');
+    }
+
+    return { user: data.user };
 };
 
 export const signIn = async (email, password) => {
@@ -16,13 +30,18 @@ export const signIn = async (email, password) => {
         password,
     });
 
-    if (error) throw error;
-    return data;
+    if (error) {
+        throw createAuthError(error.message);
+    }
+
+    return { user: data.user };
 };
 
 export const signOut = async () => {
     const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    if (error) {
+        throw createAuthError(error.message);
+    }
 };
 
 export const signInWithGoogle = async () => {
@@ -30,8 +49,13 @@ export const signInWithGoogle = async () => {
         provider: 'google',
         options: {
             redirectTo: `${window.location.origin}/dashboard`,
+            queryParams: {
+                prompt: 'select_account',
+            },
         },
     });
 
-    if (error) throw error;
+    if (error) {
+        throw createAuthError('GOOGLE_AUTH_FAILED');
+    }
 };

@@ -4,3 +4,4 @@ export const formatAmount = (value) => {
 
     return num.toLocaleString('en-IN');
 };
+
